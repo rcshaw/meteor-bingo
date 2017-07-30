@@ -49,37 +49,52 @@ class Messages extends Component {
 	}
 
 	render() {
-		let rows = this.state.messages.map((message) => {
-			let msgfrom = Meteor.users.findOne({_id: message.fromuser});
-			let timesince = moment(message.createdOn).fromNow();
-			let klass = "primary-font text-muted";
-			if(message.fromuser === Meteor.userId()) {
-				klass = "primary-font green text-muted";
-			}
-			let address = <strong className={klass}>{msgfrom && msgfrom.username} {message.fromuser === Meteor.userId()? ' -> ' + message.to.username + ' ':''}</strong>
-			return (
-				<li key={message._id} className="left clearfix">
-					<div className="chat-body clearfix">
-						<div className="header">
-							{address} <small className="pull-right text-muted">
-							{timesince} <span id={message._id}></span></small>
-						</div>
-						<p>{message.message}</p>
-					</div>
-				</li>
-			)
-		});
-
-		if(this.state.messages.length === 0) {
-			rows = <p>No messages</p>
+		if (this.state.contactMap == null) {
+			return null;
 		}
-
-		return (
-			<div className= "column col-sm-7 col-xs-1">
-				{rows}
-			</div>
-		)
+		let contactArr = [...this.state.contactMap.keys()]
+		let list = contactArr.map( (contact_id) => {
+				let msgfrom = Meteor.users.findOne({_id: contact_id});
+				return (
+					<div>{msgfrom.username}</div>
+				)
+		});
+		return list;
 	}
+
+
+	// render() {
+	// 	let rows = this.state.messages.map((message) => {
+	// 		let msgfrom = Meteor.users.findOne({_id: message.fromuser});
+	// 		let timesince = moment(message.createdOn).fromNow();
+	// 		let klass = "primary-font text-muted";
+	// 		if(message.fromuser === Meteor.userId()) {
+	// 			klass = "primary-font green text-muted";
+	// 		}
+	// 		let address = <strong className={klass}>{msgfrom && msgfrom.username} {message.fromuser === Meteor.userId()? ' -> ' + message.to.username + ' ':''}</strong>
+	// 		return (
+	// 			<li key={message._id} className="left clearfix">
+	// 				<div className="chat-body clearfix">
+	// 					<div className="header">
+	// 						{address} <small className="pull-right text-muted">
+	// 						{timesince} <span id={message._id}></span></small>
+	// 					</div>
+	// 					<p>{message.message}</p>
+	// 				</div>
+	// 			</li>
+	// 		)
+	// 	});
+
+	// 	if(this.state.messages.length === 0) {
+	// 		rows = <p>No messages</p>
+	// 	}
+
+	// 	return (
+	// 		<div className= "column col-sm-7 col-xs-1">
+	// 			{rows}
+	// 		</div>
+	// 	)
+	// }
 }
 
 export default Messages;
